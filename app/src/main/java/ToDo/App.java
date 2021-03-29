@@ -10,7 +10,7 @@ public class App {
 
     public void displayFirstMenu() {
         System.out.println("\tMain Menu");
-        System.out.println("\n1. Open To Do List"); //How is this different than the next one? Should we change #2 to Add To Do Items?
+        System.out.println("\n1. Open To Do List"); //open up from file
         System.out.println("2. Display To Do Items");
         System.out.println("3. Edit To Do Item");
         System.out.println("4. Delete To Do Item");
@@ -22,22 +22,19 @@ public class App {
 
     private String callScanner(String prompt){
 
-        //print out question:
         System.out.println(prompt);
-        Scanner scanner = new Scanner(System.in);
-
-        // print the next line
+        //Scanner scanner = new Scanner(System.in);
         String response = scanner.nextLine();
-
-        scanner.close();
-
+        //scanner.close();
         return response;
     }
 
+    Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
         App app = new App();
-        app.displayFirstMenu();
-        String task1 = "Iron pants";
+
+        //app.buildList();
+        String task1 = "De-thatch lawn";
         String task2 = "Rake leaves";
         String task3 = "Till garden";
         ArrayList<String> listOfTasks = new ArrayList<String>();
@@ -52,45 +49,48 @@ public class App {
 //        listOfTasksX.add(task1x);
 //        listOfTasksX.add(task2x);
 //        listOfTasksX.add(task3x);
+//
+//        System.out.println(listOfTasksX.size());
 
-        String prompt= "\nPlease input your option:";
+        String responseReturned;
+        do {
+            app.displayFirstMenu();
 
-        String responseReturned = app.callScanner(prompt);
-        //do code based on what response we get back
-        System.out.println("\nYour response was " + responseReturned);
+            String prompt = "\nPlease input an option 1 to 6:";
+            responseReturned = app.callScanner(prompt);
 
-        switch (responseReturned){
-            case "1":
-                System.out.println("You chose to open the To Do List");
-                break;
-            case "2":
-                System.out.println("\n\tList of Tasks");
-                for (String i : listOfTasks) {
-                    System.out.println(i);
-                }
-                break;
-            case "3":
-                System.out.println("You chose to edit a To Do Item");
-                break;
-            case "4":
-                System.out.println("You chose to delete a To Do Item");
-                break;
-            case "5":
-                System.out.println("You chose to save the To Do List");
-                break;
-            case "6":
-                System.out.println("You chose to exit the To Do List");
-                break;
-            //Add add new To Do List item?
-            default:
-                System.out.println("Please choose a number from 1 to 6");
-                break;
-        }
-
+            System.out.println("\nYour response was " + responseReturned);
+            switch (responseReturned) {
+                case "1":
+                    System.out.println("You chose to open the To Do List");
+                    break;
+                case "2":
+                    System.out.println("\n\tList of Tasks");
+                    for (String i : listOfTasks) {
+                        System.out.println(i);
+                    }
+                    break;
+                case "3":
+                    System.out.println("You chose to edit a To Do Item");
+                    break;
+                case "4":
+                    System.out.println("You chose to delete a To Do Item");
+                    break;
+                case "5":
+                    System.out.println("You chose to save the To Do List");
+                    break;
+                case "6":
+                    System.out.println("You chose to exit the To Do List");
+                    break;
+                default:
+                    System.out.println("You chose an invalid option - Please choose a number from 1 to 6");
+                    break;
+            }
+        } while (!responseReturned.equals("6"));
+        app.scanner.close();
     }
 
-
-
+//write out the workflow of how this all would work on a greenscreen - can be on a notepad or in here.
 
 
 }
