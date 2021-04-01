@@ -1,5 +1,7 @@
 package ToDo;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -27,6 +29,24 @@ public class App {
         String response = scanner.nextLine();
         //scanner.close();
         return response;
+    }
+
+    private void displayTaskList(ArrayList<String> listOfTasks) {
+        System.out.println("\n\tList of Tasks");
+        for (String i : listOfTasks) {
+            System.out.println(i);
+        }
+        String prompt = "\nDo you want to return to the Main Menu? (Y/N)";
+        String responseReturned = callScanner(prompt);
+        if(responseReturned.equals("Y"))
+            return;
+        responseReturned = callScanner("\nDo you want to exit? (Y/N)");
+        if(responseReturned.equals("Y"))
+            System.exit(0);
+        else
+            return;
+
+
     }
 
     Scanner scanner = new Scanner(System.in);
@@ -65,10 +85,7 @@ public class App {
                     System.out.println("You chose to open the To Do List");
                     break;
                 case "2":
-                    System.out.println("\n\tList of Tasks");
-                    for (String i : listOfTasks) {
-                        System.out.println(i);
-                    }
+                    app.displayTaskList(listOfTasks);
                     break;
                 case "3":
                     System.out.println("You chose to edit a To Do Item");
@@ -90,7 +107,9 @@ public class App {
         app.scanner.close();
     }
 
-//write out the workflow of how this all would work on a greenscreen - can be on a notepad or in here.
+
+
+
 
 
 }
