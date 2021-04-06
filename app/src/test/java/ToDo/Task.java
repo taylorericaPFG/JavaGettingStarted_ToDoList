@@ -1,6 +1,8 @@
 package ToDo;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Task {
     private String name;
@@ -8,38 +10,15 @@ public class Task {
     private boolean inProgress;
     private boolean completed;
 
-    public String getName() {
-        return name;
+    public Task() {
     }
 
-    public void setName(String name) {
+    public Task(String name) {
         this.name = name;
     }
 
-    public LocalDate getDueDate() {
-        return dueDate;
+    public Task(String ironing, boolean b, boolean b1) {
     }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public boolean isInProgress() {
-        return inProgress;
-    }
-
-    public void setInProgress(boolean inProgress) {
-        this.inProgress = inProgress;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
     public Task(String name, LocalDate dueDate, boolean inProgress, boolean completed) {
         this.name = name;
         this.dueDate = dueDate;
@@ -47,7 +26,46 @@ public class Task {
         this.completed = completed;
     }
 
-    public Task(String name) {
+
+    public String getName() {
+
+        return name;
+    }
+
+    public void setName(String name) {
+
         this.name = name;
     }
+
+    public LocalDate getDueDate() {
+
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+
+        this.dueDate = dueDate;
+    }
+
+    public boolean isInProgress() {
+
+        return inProgress;
+    }
+
+    public void setInProgress(boolean inProgress) {
+
+        this.inProgress = inProgress;
+    }
+
+    public boolean isCompleted() {
+
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+
+        this.completed = completed;
+    }
+
 }
+

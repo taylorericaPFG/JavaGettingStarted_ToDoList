@@ -1,23 +1,26 @@
-package ToDo;
 
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+
+
+package ToDo;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
     public String getGreeting() {
+
         return "ToDo List Manager";
     }
 
     public void displayFirstMenu() {
         System.out.println("\tMain Menu");
-        System.out.println("\n1. Open To Do List"); //open up from file
+        System.out.println("\n1. Open To Do List"); //eventually open the to do list from a file
         System.out.println("2. Display To Do Items");
         System.out.println("3. Edit To Do Item");
-        System.out.println("4. Delete To Do Item");
-        System.out.println("5. Save To Do List");
-        System.out.println("6. Exit");
+        System.out.println("4. Add To Do Item");
+        System.out.println("5. Delete To Do Item");
+        System.out.println("6. Save To Do List"); //eventually save the to do list back to the file
+        System.out.println("7. Exit");
 
         return;
     }
@@ -25,28 +28,65 @@ public class App {
     private String callScanner(String prompt){
 
         System.out.println(prompt);
-        //Scanner scanner = new Scanner(System.in);
         String response = scanner.nextLine();
-        //scanner.close();
         return response;
     }
 
     private void displayTaskList(ArrayList<String> listOfTasks) {
-        System.out.println("\n\tList of Tasks");
-        for (String i : listOfTasks) {
-            System.out.println(i);
-        }
+        showTaskList(listOfTasks);
+        askIfFinished();
+    }
+
+    private void askIfFinished() {
         String prompt = "\nDo you want to return to the Main Menu? (Y/N)";
         String responseReturned = callScanner(prompt);
-        if(responseReturned.equals("Y"))
+
+        if(responseReturned.equalsIgnoreCase("Y"))
             return;
-        responseReturned = callScanner("\nDo you want to exit? (Y/N)");
-        if(responseReturned.equals("Y"))
+
+        prompt = "\nDo you want to exit? (Y/N)";
+        responseReturned = callScanner(prompt);
+        if(responseReturned.equalsIgnoreCase("Y"))
             System.exit(0);
         else
             return;
+    }
 
+    private void showTaskList(ArrayList<String> listOfTasks) {
+        System.out.println("\n\tList of Tasks");
+        int count = 1;
+        for (String i : listOfTasks) {
+            System.out.println(count + " - " + i);
+            count++;
+        }
+    }
 
+    private void deleteTask(ArrayList<String> listOfTasks) {
+        showTaskList(listOfTasks);
+        String prompt = "\nType the number of the item you wish to delete and hit enter. ";
+        String responseReturned = callScanner(prompt);
+        System.out.println("You chose to delete task #" + responseReturned);
+        int responseReturnedInt = Integer.parseInt(responseReturned);
+        int sizeOfTaskList = listOfTasks.size();
+        if (sizeOfTaskList < responseReturnedInt) {
+            System.out.println("invalid choice");
+            askIfFinished();
+        }
+        else {
+            listOfTasks.remove(responseReturnedInt - 1);
+            showTaskList(listOfTasks);
+            askIfFinished();
+        }
+    }
+
+    private void addTask(ArrayList<String> listOfTasks){
+        showTaskList(listOfTasks);
+        String prompt = "\nType the item you wish to add and hit enter.";
+        String responseReturned = callScanner(prompt);
+        System.out.println("You chose to add a task to" + responseReturned);
+        listOfTasks.add(responseReturned + 1);
+        showTaskList(listOfTasks);
+        askIfFinished();
     }
 
     Scanner scanner = new Scanner(System.in);
@@ -56,15 +96,15 @@ public class App {
         //app.buildList();
         String task1 = "De-thatch lawn";
         String task2 = "Rake leaves";
-        String task3 = "Till garden";
+        String task3 = "Mow lawn";
         ArrayList<String> listOfTasks = new ArrayList<String>();
         listOfTasks.add(task1);
         listOfTasks.add(task2);
         listOfTasks.add(task3);
 
-//        Task task1x = new Task("Iron pants");
+//        Task task1x = new Task("De-thatch lawn");
 //        Task task2x = new Task("Rake Leaves");
-//        Task task3x = new Task("Till garden");
+//        Task task3x = new Task("Mow Lawn");
 //        ArrayList<Task> listOfTasksX = new ArrayList<>();
 //        listOfTasksX.add(task1x);
 //        listOfTasksX.add(task2x);
@@ -76,7 +116,7 @@ public class App {
         do {
             app.displayFirstMenu();
 
-            String prompt = "\nPlease input an option 1 to 6:";
+            String prompt = "\nPlease input an option 1 to 7:";
             responseReturned = app.callScanner(prompt);
 
             System.out.println("\nYour response was " + responseReturned);
@@ -91,19 +131,24 @@ public class App {
                     System.out.println("You chose to edit a To Do Item");
                     break;
                 case "4":
-                    System.out.println("You chose to delete a To Do Item");
+                    System.out.println("You chose to add a To Do Item");
+                    app.addTask(listOfTasks);
                     break;
                 case "5":
-                    System.out.println("You chose to save the To Do List");
+                    System.out.println("You chose to delete a To Do Item");
+                    app.deleteTask(listOfTasks);
                     break;
                 case "6":
+                    System.out.println("You chose to save the To Do List");
+                    break;
+                case "7":
                     System.out.println("You chose to exit the To Do List");
                     break;
                 default:
-                    System.out.println("You chose an invalid option - Please choose a number from 1 to 6");
+                    System.out.println("You chose an invalid option. Please choose a number from 1 to 7");
                     break;
             }
-        } while (!responseReturned.equals("6"));
+        } while (!responseReturned.equals("7"));
         app.scanner.close();
     }
 
