@@ -79,15 +79,16 @@ public class App {
         }
     }
 
-    private void addTask(ArrayList<String> listOfTasks){
+    private void addTask(ArrayList<String> listOfTasks) {
         showTaskList(listOfTasks);
         String prompt = "\nType the item you wish to add and hit enter.";
         String responseReturned = callScanner(prompt);
-        System.out.println("You chose to add a task to" + responseReturned);
-        listOfTasks.add(responseReturned + 1);
-        showTaskList(listOfTasks);
-        askIfFinished();
-    }
+        System.out.println("You chose to add task" + responseReturned);
+            listOfTasks.add(responseReturned);
+            showTaskList(listOfTasks);
+            askIfFinished();
+        }
+
 
     Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
