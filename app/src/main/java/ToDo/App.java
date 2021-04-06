@@ -79,17 +79,20 @@ public class App {
         showTaskList(listOfTasks);
         String prompt = "\nType the number of the item you wish to delete and press Enter";
         String responseReturned = callScanner(prompt);
-        System.out.println("You chose to delete task: " + responseReturned);
-        int responseReturnedInt = Integer.parseInt(responseReturned);
-        int sizeOfTaskList = listOfTasks.size();
-        if (sizeOfTaskList < responseReturnedInt) {
-            System.out.println("This is an invalid task number");
+        if (responseReturned.equals(""))
             askIfFinished();
-        }
         else {
-            listOfTasks.remove(responseReturnedInt - 1);
-            showTaskList(listOfTasks);
-            askIfFinished();
+            System.out.println("You chose to delete task: " + responseReturned);
+            int responseReturnedInt = Integer.parseInt(responseReturned);
+            int sizeOfTaskList = listOfTasks.size();
+            if (sizeOfTaskList < responseReturnedInt) {
+                System.out.println("This is an invalid task number");
+                askIfFinished();
+            } else {
+                listOfTasks.remove(responseReturnedInt - 1);
+                showTaskList(listOfTasks);
+                askIfFinished();
+            }
         }
     }
 
