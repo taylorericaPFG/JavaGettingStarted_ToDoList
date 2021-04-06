@@ -77,7 +77,7 @@ public class App {
 
     private void deleteTask(ArrayList<String> listOfTasks) {
         showTaskList(listOfTasks);
-        String prompt = "\nType the number of the item you wish to delete and press Enter";
+        String prompt = "\nType the number of the item you wish to delete and press Enter or simply press Enter to return to Main Menu without deleting a To Do Item";
         String responseReturned = callScanner(prompt);
         if (responseReturned.equals(""))
             askIfFinished();
