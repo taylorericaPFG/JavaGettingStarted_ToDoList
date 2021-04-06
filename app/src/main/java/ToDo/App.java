@@ -61,15 +61,29 @@ public class App {
         }
     }
 
+    private void addTask(ArrayList<String> listOfTasks) {
+        showTaskList(listOfTasks);
+        String prompt = "\nType the item you wish to add and press Enter or simply press Enter to return to Main Menu without adding a To Do Item";
+        String responseReturned = callScanner(prompt);
+        if (responseReturned.equals(""))
+            askIfFinished();
+        else {
+            System.out.println("You chose to add task: " + responseReturned);
+            listOfTasks.add(responseReturned);
+            showTaskList(listOfTasks);
+            askIfFinished();
+        }
+    }
+
     private void deleteTask(ArrayList<String> listOfTasks) {
         showTaskList(listOfTasks);
-        String prompt = "\nType the number of the item you wish to delete and hit enter. ";
+        String prompt = "\nType the number of the item you wish to delete and press Enter";
         String responseReturned = callScanner(prompt);
-        System.out.println("You chose to delete task #" + responseReturned);
+        System.out.println("You chose to delete task: " + responseReturned);
         int responseReturnedInt = Integer.parseInt(responseReturned);
         int sizeOfTaskList = listOfTasks.size();
         if (sizeOfTaskList < responseReturnedInt) {
-            System.out.println("invalid choice");
+            System.out.println("This is an invalid task number");
             askIfFinished();
         }
         else {
@@ -78,17 +92,6 @@ public class App {
             askIfFinished();
         }
     }
-
-    private void addTask(ArrayList<String> listOfTasks) {
-        showTaskList(listOfTasks);
-        String prompt = "\nType the item you wish to add and hit enter.";
-        String responseReturned = callScanner(prompt);
-        System.out.println("You chose to add task" + responseReturned);
-            listOfTasks.add(responseReturned);
-            showTaskList(listOfTasks);
-            askIfFinished();
-        }
-
 
     Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
@@ -120,7 +123,7 @@ public class App {
             String prompt = "\nPlease input an option 1 to 7:";
             responseReturned = app.callScanner(prompt);
 
-            System.out.println("\nYour response was " + responseReturned);
+            System.out.println("\nYour response was: " + responseReturned);
             switch (responseReturned) {
                 case "1":
                     System.out.println("You chose to open the To Do List");
