@@ -61,6 +61,29 @@ public class App {
         }
     }
 
+    private void editTask(ArrayList<String> listOfTasks) {
+        showTaskList(listOfTasks);
+        String prompt = "\nType the item you wish to edit and press Enter or simply press Enter to return to Main Menu without editing a To Do Item";
+        String responseReturned = callScanner(prompt);
+        if (responseReturned.equals(""))
+            askIfFinished();
+        else {
+            System.out.println("You chose to edit task: " + responseReturned);
+            int responseReturnedInt = Integer.parseInt(responseReturned);
+            int sizeOfTaskList = listOfTasks.size();
+            if (sizeOfTaskList < responseReturnedInt) {
+                System.out.println("This is an invalid task number");
+                askIfFinished();
+            } else {
+                prompt = "\nType the wording with which you would like to edit the existing To Do item and press Enter";
+                String responseReturned2 = callScanner(prompt);
+                listOfTasks.set((responseReturnedInt -1), responseReturned2);
+                showTaskList(listOfTasks);
+                askIfFinished();
+            }
+        }
+    }
+
     private void addTask(ArrayList<String> listOfTasks) {
         showTaskList(listOfTasks);
         String prompt = "\nType the item you wish to add and press Enter or simply press Enter to return to Main Menu without adding a To Do Item";
@@ -136,6 +159,7 @@ public class App {
                     break;
                 case "3":
                     System.out.println("You chose to edit a To Do Item");
+                    app.editTask(listOfTasks);
                     break;
                 case "4":
                     System.out.println("You chose to add a To Do Item");
