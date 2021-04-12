@@ -3,6 +3,8 @@
 
 package ToDo;
 
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -32,7 +34,7 @@ public class App {
         return response;
     }
 
-    private void displayTaskList(ArrayList<String> listOfTasks) {
+    private void displayTaskList(ArrayList<Task> listOfTasks) { //add to display everything or even to show just completed ones, etc.
         showTaskList(listOfTasks);
         askIfFinished();
     }
@@ -52,18 +54,18 @@ public class App {
             return;
     }
 
-    private void showTaskList(ArrayList<String> listOfTasks) {
+    private void showTaskList(ArrayList<Task> listOfTasks) { //add code to display the due date, etc. too
         System.out.println("\n\tList of Tasks");
         int count = 1;
-        for (String i : listOfTasks) {
-            System.out.println(count + " - " + i);
+        for (Task t : listOfTasks) {
+            System.out.println(count + " - " + t.getName() + " due " + t.getDueDate());
             count++;
         }
     }
 
-    private void editTask(ArrayList<String> listOfTasks) {
+    private void editTask(ArrayList<Task> listOfTasks) { //add code to edit due date or status, etc.
         showTaskList(listOfTasks);
-        String prompt = "\nType the item you wish to edit and press Enter or simply press Enter to return to Main Menu without editing a To Do Item";
+        String prompt = "\nType the number of the item you wish to edit and press Enter or simply press Enter to return to Main Menu without editing a To Do Item";
         String responseReturned = callScanner(prompt);
         if (responseReturned.equals(""))
             askIfFinished();
@@ -76,29 +78,33 @@ public class App {
                 askIfFinished();
             } else {
                 prompt = "\nType the wording with which you would like to edit the existing To Do item and press Enter";
-                String responseReturned2 = callScanner(prompt);
-                listOfTasks.set((responseReturnedInt -1), responseReturned2);
+                String editedTaskName = callScanner(prompt);
+                Task task = listOfTasks.get(responseReturnedInt -1); //this tells what item to grab
+                task.setName(editedTaskName); //this sets the new edited task name
                 showTaskList(listOfTasks);
                 askIfFinished();
             }
         }
     }
 
-    private void addTask(ArrayList<String> listOfTasks) {
+    private void addTask(ArrayList<Task> listOfTasks) {
         showTaskList(listOfTasks);
-        String prompt = "\nType the item you wish to add and press Enter or simply press Enter to return to Main Menu without adding a To Do Item";
-        String responseReturned = callScanner(prompt);
-        if (responseReturned.equals(""))
+        String prompt = "\nType the wording for the item you wish to add and press Enter or simply press Enter to return to Main Menu without adding a To Do Item";
+        String taskName = callScanner(prompt);
+        String dueDateprompt = "\nType the Due Date for " + taskName + " (YYYY-MM-DD)";
+        LocalDate taskDueDate = LocalDate.parse(callScanner(dueDateprompt));
+        Task newTask = new Task(taskName, taskDueDate, true, false);
+        if (taskName.equals(""))
             askIfFinished();
         else {
-            System.out.println("You chose to add task: " + responseReturned);
-            listOfTasks.add(responseReturned);
+            System.out.println("You chose to add task: " + taskName + " with a due date of " + taskDueDate); //add some code to add the due date too so we ask for new name then ask for due date, etc.
+            listOfTasks.add(newTask);
             showTaskList(listOfTasks);
             askIfFinished();
         }
     }
 
-    private void deleteTask(ArrayList<String> listOfTasks) {
+    private void deleteTask(ArrayList<Task> listOfTasks) {
         showTaskList(listOfTasks);
         String prompt = "\nType the number of the item you wish to delete and press Enter or simply press Enter to return to Main Menu without deleting a To Do Item";
         String responseReturned = callScanner(prompt);
@@ -123,24 +129,16 @@ public class App {
     public static void main(String[] args) {
         App app = new App();
 
-        //app.buildList();
-        String task1 = "De-thatch lawn";
-        String task2 = "Rake leaves";
-        String task3 = "Mow lawn";
-        ArrayList<String> listOfTasks = new ArrayList<String>();
+        Task task1 = new Task("De-thatch lawn", LocalDate.of(2021,05, 01), true, false);
+        Task task2 = new Task("Rake Leaves", LocalDate.of(2021,05, 02), false, false);
+        Task task3 = new Task("Mow Lawn", LocalDate.of(2021,05, 03), false, false);
+        ArrayList<Task> listOfTasks = new ArrayList<>();
         listOfTasks.add(task1);
         listOfTasks.add(task2);
         listOfTasks.add(task3);
 
-//        Task task1x = new Task("De-thatch lawn");
-//        Task task2x = new Task("Rake Leaves");
-//        Task task3x = new Task("Mow Lawn");
-//        ArrayList<Task> listOfTasksX = new ArrayList<>();
-//        listOfTasksX.add(task1x);
-//        listOfTasksX.add(task2x);
-//        listOfTasksX.add(task3x);
-//
-//        System.out.println(listOfTasksX.size());
+        System.out.println(listOfTasks.size());
+        System.out.println(listOfTasks.get(0).getName());
 
         String responseReturned;
         do {
@@ -155,6 +153,7 @@ public class App {
                     System.out.println("You chose to open the To Do List");
                     break;
                 case "2":
+                    System.out.println("You chose to display the To Do List");
                     app.displayTaskList(listOfTasks);
                     break;
                 case "3":
@@ -184,7 +183,7 @@ public class App {
     }
 
 
-
+//At end look for duplicate code to be able to call a function to refactor it
 
 
 
