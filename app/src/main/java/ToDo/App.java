@@ -4,6 +4,8 @@
 package ToDo;
 
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -58,7 +60,7 @@ public class App {
         System.out.println("\n\tList of Tasks");
         int count = 1;
         for (Task t : listOfTasks) {
-            System.out.println(count + " - " + t.getName() + " due " + t.getDueDate());
+            System.out.println(count + " - " + t.getName() + "\n\t\tDue " + t.getDueDate() + "\n\t\tTask in progress? " + t.isInProgress() + "\n\t\tTask completed? " + t.isCompleted());
             count++;
         }
     }
@@ -81,9 +83,15 @@ public class App {
                 String editedTaskName = callScanner(prompt);
                 String editedDatePrompt = "\nType the Due Date for " + editedTaskName + " (YYYY-MM-DD)";
                 LocalDate editedDueDate = LocalDate.parse(callScanner(editedDatePrompt));
+                String editedProgressPrompt = "\nType the In Progress status for " + editedTaskName + " (true/false)";
+                Boolean editedProgress = Boolean.valueOf(callScanner(editedProgressPrompt));
+                String editedCompletePrompt = "\nType the Complete status for " + editedTaskName + " (true/false)";
+                Boolean editedComplete = Boolean.valueOf(callScanner(editedCompletePrompt));
                 Task task = listOfTasks.get(responseReturnedInt -1); //this tells what item to grab
                 task.setName(editedTaskName); //this sets the edited task name
                 task.setDueDate(editedDueDate); //this sets the edited due date
+                task.setInProgress(editedProgress); //this sets the in progress status
+                task.setCompleted(editedComplete); //this sets the completed status
                 showTaskList(listOfTasks);
                 askIfFinished();
             }
@@ -100,7 +108,7 @@ public class App {
             String dueDateprompt = "\nType the Due Date for " + taskName + " (YYYY-MM-DD)";
             LocalDate taskDueDate = LocalDate.parse(callScanner(dueDateprompt));
             Task newTask = new Task(taskName, taskDueDate, false, false);
-            System.out.println("You chose to add task: " + taskName + " with a due date of " + taskDueDate); //add some code to add the due date too so we ask for new name then ask for due date, etc.
+            System.out.println("You chose to add task: " + taskName + " with a due date of " + taskDueDate);
             listOfTasks.add(newTask);
             showTaskList(listOfTasks);
             askIfFinished();
