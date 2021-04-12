@@ -79,8 +79,11 @@ public class App {
             } else {
                 prompt = "\nType the wording with which you would like to edit the existing To Do item and press Enter";
                 String editedTaskName = callScanner(prompt);
+                String editedDatePrompt = "\nType the Due Date for " + editedTaskName + " (YYYY-MM-DD)";
+                LocalDate editedDueDate = LocalDate.parse(callScanner(editedDatePrompt));
                 Task task = listOfTasks.get(responseReturnedInt -1); //this tells what item to grab
-                task.setName(editedTaskName); //this sets the new edited task name
+                task.setName(editedTaskName); //this sets the edited task name
+                task.setDueDate(editedDueDate); //this sets the edited due date
                 showTaskList(listOfTasks);
                 askIfFinished();
             }
@@ -93,7 +96,7 @@ public class App {
         String taskName = callScanner(prompt);
         String dueDateprompt = "\nType the Due Date for " + taskName + " (YYYY-MM-DD)";
         LocalDate taskDueDate = LocalDate.parse(callScanner(dueDateprompt));
-        Task newTask = new Task(taskName, taskDueDate, true, false);
+        Task newTask = new Task(taskName, taskDueDate, false, false);
         if (taskName.equals(""))
             askIfFinished();
         else {
