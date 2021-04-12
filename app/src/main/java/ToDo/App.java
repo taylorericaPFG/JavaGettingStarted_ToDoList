@@ -94,12 +94,12 @@ public class App {
         showTaskList(listOfTasks);
         String prompt = "\nType the wording for the item you wish to add and press Enter or simply press Enter to return to Main Menu without adding a To Do Item";
         String taskName = callScanner(prompt);
-        String dueDateprompt = "\nType the Due Date for " + taskName + " (YYYY-MM-DD)";
-        LocalDate taskDueDate = LocalDate.parse(callScanner(dueDateprompt));
-        Task newTask = new Task(taskName, taskDueDate, false, false);
         if (taskName.equals(""))
             askIfFinished();
         else {
+            String dueDateprompt = "\nType the Due Date for " + taskName + " (YYYY-MM-DD)";
+            LocalDate taskDueDate = LocalDate.parse(callScanner(dueDateprompt));
+            Task newTask = new Task(taskName, taskDueDate, false, false);
             System.out.println("You chose to add task: " + taskName + " with a due date of " + taskDueDate); //add some code to add the due date too so we ask for new name then ask for due date, etc.
             listOfTasks.add(newTask);
             showTaskList(listOfTasks);
