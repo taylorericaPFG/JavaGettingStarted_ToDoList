@@ -114,8 +114,11 @@ public class App {
                             task.setCompleted(editedComplete); //this sets the completed status
                             showTaskList(listOfTasks);
                             break;
-                        default:
+                        case "":
                             askIfFinished();
+                            break;
+                        default:
+                            System.out.println("\nYou chose an invalid option");;
                             break;
                     }
                 } while (!editPiece.equals(""));
