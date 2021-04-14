@@ -3,12 +3,14 @@
 
 package ToDo;
 
-
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 public class App {
     public String getGreeting() {
@@ -56,7 +58,7 @@ public class App {
             return;
     }
 
-    private void showTaskList(ArrayList<Task> listOfTasks) { //add code to display the due date, etc. too
+    private void showTaskList(ArrayList<Task> listOfTasks) {
         System.out.println("\n\tList of Tasks");
         int count = 1;
         for (Task t : listOfTasks) {
@@ -65,9 +67,11 @@ public class App {
         }
     }
 
-    private void editTask(ArrayList<Task> listOfTasks) { //add code to edit due date or status, etc.
+    //create method to accept true or false answer
+
+    private void editTask(ArrayList<Task> listOfTasks) {
         showTaskList(listOfTasks);
-        String prompt = "\nType the number of the item you wish to edit and press Enter or simply press Enter to return to Main Menu without editing a To Do Item";
+        String prompt = "\nType the number of the item you want to edit and press Enter or simply press Enter to return to Main Menu without editing a To Do Item";
         String responseReturned = callScanner(prompt);
         if (responseReturned.equals(""))
             askIfFinished();
@@ -79,24 +83,56 @@ public class App {
                 System.out.println("This is an invalid task number");
                 askIfFinished();
             } else {
-                prompt = "\nType the wording with which you would like to edit the existing To Do item and press Enter";
-                String editedTaskName = callScanner(prompt);
-                String editedDatePrompt = "\nType the Due Date for " + editedTaskName + " (YYYY-MM-DD)";
-                LocalDate editedDueDate = LocalDate.parse(callScanner(editedDatePrompt));
-                String editedProgressPrompt = "\nType the In Progress status for " + editedTaskName + " (true/false)";
-                Boolean editedProgress = Boolean.valueOf(callScanner(editedProgressPrompt));
-                String editedCompletePrompt = "\nType the Complete status for " + editedTaskName + " (true/false)";
-                Boolean editedComplete = Boolean.valueOf(callScanner(editedCompletePrompt));
-                Task task = listOfTasks.get(responseReturnedInt -1); //this tells what item to grab
-                task.setName(editedTaskName); //this sets the edited task name
-                task.setDueDate(editedDueDate); //this sets the edited due date
-                task.setInProgress(editedProgress); //this sets the in progress status
-                task.setCompleted(editedComplete); //this sets the completed status
-                showTaskList(listOfTasks);
-                askIfFinished();
+                String editPiece;
+                do {
+                    displayEditMenu();
+                    prompt = "\nUsing the options on the Edit Menu please type the number 1 to 4 of the piece of the task you want to edit or press Enter to return to the Main Menu";
+                    editPiece = callScanner(prompt);
+                    Task task = listOfTasks.get(responseReturnedInt - 1); //this tells what item to grab
+                    switch (editPiece) {
+                        case "1":
+                            prompt = "\nType Task Name you wish to display";
+                            String editedTaskName = callScanner(prompt);
+                            task.setName(editedTaskName); //this sets the edited task name
+                            showTaskList(listOfTasks);
+                            break;
+                        case "2":
+                            String editedDatePrompt = "\nType the Due Date (YYYY-MM-DD)";
+                            LocalDate editedDueDate = LocalDate.parse(callScanner(editedDatePrompt));
+                            task.setDueDate(editedDueDate); //this sets the edited due date
+                            showTaskList(listOfTasks);
+                            break;
+                        case "3":
+                            String editedProgressPrompt = "\nType the In Progress status (true/false)";
+                            Boolean editedProgress = Boolean.valueOf(callScanner(editedProgressPrompt).toLowerCase(Locale.ROOT));
+                            task.setInProgress(editedProgress); //this sets the in progress status
+                            showTaskList(listOfTasks);
+                            break;
+                        case "4":
+                            String editedCompletePrompt = "\nType the Complete status (true/false)";
+                            Boolean editedComplete = Boolean.valueOf(callScanner(editedCompletePrompt).toLowerCase(Locale.ROOT));
+                            task.setCompleted(editedComplete); //this sets the completed status
+                            showTaskList(listOfTasks);
+                            break;
+                        default:
+                            askIfFinished();
+                            break;
+                    }
+                } while (!editPiece.equals(""));
             }
         }
     }
+
+    private void displayEditMenu(){
+        System.out.println("\n\tEdit Menu");
+        System.out.println("\n1. Edit Task Name");
+        System.out.println("2. Edit Task Due Date");
+        System.out.println("3. Edit In Progress Status");
+        System.out.println("4. Edit Completed Status");
+
+        return;
+    }
+
 
     private void addTask(ArrayList<Task> listOfTasks) {
         showTaskList(listOfTasks);
@@ -136,6 +172,17 @@ public class App {
         }
     }
 
+//    private static void convertObjectsToJson() {
+//        Task myTask = new Task("Mowing", LocalDate.of(2021, 05,05), false, false);
+//        ObjectMapper mapper = new ObjectMapper();
+//        String myObj = null;
+//        try {
+//            myObj = mapper.writeValueAsString(myTask);
+//        }catch (JsonProcessingException e){
+//            e.printStackTrace();
+//        }
+//    }
+
     Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
         App app = new App();
@@ -147,9 +194,6 @@ public class App {
         listOfTasks.add(task1);
         listOfTasks.add(task2);
         listOfTasks.add(task3);
-
-        System.out.println(listOfTasks.size());
-        System.out.println(listOfTasks.get(0).getName());
 
         String responseReturned;
         do {
@@ -194,8 +238,10 @@ public class App {
     }
 
 
+
+
 //At end look for duplicate code to be able to call a function to refactor it
 
-
+//how do I convert a java object array list to JSON.  Example can be found here: https://www.geeksforgeeks.org/convert-java-object-to-json-string-using-jackson-api/
 
 }
