@@ -20,12 +20,12 @@ public class App {
 
     public void displayFirstMenu() {
         System.out.println("\tMain Menu");
-        System.out.println("\n1. Open To Do List"); //eventually open the to do list from a file
+        System.out.println("\n1. Open To Do List"); //eventually open the to do list from a file -- Look at this site to read the file: https://crunchify.com/how-to-read-json-object-from-file-in-java/
         System.out.println("2. Display To Do Items");
         System.out.println("3. Edit To Do Item");
         System.out.println("4. Add To Do Item");
         System.out.println("5. Delete To Do Item");
-        System.out.println("6. Save To Do List"); //eventually save the to do list back to the file
+        System.out.println("6. Save To Do List"); //eventually save the to do list back to the file -- Look at this site to write the file: https://crunchify.com/how-to-write-json-object-to-file-in-java/
         System.out.println("7. Exit");
 
         return;
@@ -91,15 +91,17 @@ public class App {
                     Task task = listOfTasks.get(responseReturnedInt - 1); //this tells what item to grab
                     switch (editPiece) {
                         case "1":
-                            prompt = "\nType Task Name you wish to display";
+                            prompt = "\nType new Task Name to display";
+                            System.out.println("Current Task Name: " + task.getName());
                             String editedTaskName = callScanner(prompt);
                             task.setName(editedTaskName); //this sets the edited task name
                             showTaskList(listOfTasks);
                             break;
                         case "2":
-                            String editedDatePrompt = "\nType the Due Date (YYYY-MM-DD)";
+                            String editedDatePrompt = "\nType the new Due Date (YYYY-MM-DD)";
+                            System.out.println("Current Due Date: " + task.getDueDate());
                             LocalDate editedDueDate = LocalDate.parse(callScanner(editedDatePrompt));
-                            task.setDueDate(editedDueDate); //this sets the edited due date
+                            task.setDueDate(editedDueDate.toString()); //this sets the edited due date
                             showTaskList(listOfTasks);
                             break;
                         case "3":
@@ -118,7 +120,7 @@ public class App {
                             askIfFinished();
                             break;
                         default:
-                            System.out.println("\nYou chose an invalid option");;
+                            System.out.println("\nYou chose an invalid option");
                             break;
                     }
                 } while (!editPiece.equals(""));
@@ -144,8 +146,8 @@ public class App {
         if (taskName.equals(""))
             askIfFinished();
         else {
-            String dueDateprompt = "\nType the Due Date for " + taskName + " (YYYY-MM-DD)";
-            LocalDate taskDueDate = LocalDate.parse(callScanner(dueDateprompt));
+            String dueDatePrompt = "\nType the Due Date for " + taskName + " (YYYY-MM-DD)";
+            LocalDate taskDueDate = LocalDate.parse(callScanner(dueDatePrompt));
             Task newTask = new Task(taskName, taskDueDate, false, false);
             System.out.println("You chose to add task: " + taskName + " with a due date of " + taskDueDate);
             listOfTasks.add(newTask);
@@ -175,16 +177,17 @@ public class App {
         }
     }
 
-//    private static void convertObjectsToJson() {
-//        Task myTask = new Task("Mowing", LocalDate.of(2021, 05,05), false, false);
-//        ObjectMapper mapper = new ObjectMapper();
-//        String myObj = null;
-//        try {
-//            myObj = mapper.writeValueAsString(myTask);
-//        }catch (JsonProcessingException e){
-//            e.printStackTrace();
-//        }
-//    }
+
+    private static String convertListOfObjectsToJson(ArrayList <Task> taskList) {
+        ObjectMapper mapper = new ObjectMapper();
+        String result = null;
+        try {
+            result = mapper.writeValueAsString(taskList);
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 
     Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
@@ -197,6 +200,7 @@ public class App {
         listOfTasks.add(task1);
         listOfTasks.add(task2);
         listOfTasks.add(task3);
+        String jsonList = convertListOfObjectsToJson(listOfTasks);
 
         String responseReturned;
         do {
