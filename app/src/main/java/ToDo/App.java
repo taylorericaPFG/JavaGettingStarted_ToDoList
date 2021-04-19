@@ -1,8 +1,7 @@
-
-
-
 package ToDo;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -13,6 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class App {
+
+    private static FileWriter file;
+
     public String getGreeting() {
 
         return "ToDo List Manager";
@@ -25,14 +27,12 @@ public class App {
         System.out.println("3. Edit To Do Item");
         System.out.println("4. Add To Do Item");
         System.out.println("5. Delete To Do Item");
-        System.out.println("6. Save To Do List"); //eventually save the to do list back to the file -- Look at this site to write the file: https://crunchify.com/how-to-write-json-object-to-file-in-java/
+        System.out.println("6. Save To Do List To File");
         System.out.println("7. Exit");
-
         return;
     }
 
-    private String callScanner(String prompt){
-
+    private String callScanner(String prompt) {
         System.out.println(prompt);
         String response = scanner.nextLine();
         return response;
@@ -47,12 +47,12 @@ public class App {
         String prompt = "\nDo you want to return to the Main Menu? (Y/N)";
         String responseReturned = callScanner(prompt);
 
-        if(responseReturned.equalsIgnoreCase("Y"))
+        if (responseReturned.equalsIgnoreCase("Y"))
             return;
 
         prompt = "\nDo you want to exit? (Y/N)";
         responseReturned = callScanner(prompt);
-        if(responseReturned.equalsIgnoreCase("Y"))
+        if (responseReturned.equalsIgnoreCase("Y"))
             System.exit(0);
         else
             return;
@@ -128,7 +128,7 @@ public class App {
         }
     }
 
-    private void displayEditMenu(){
+    private void displayEditMenu() {
         System.out.println("\n\tEdit Menu");
         System.out.println("\n1. Edit Task Name");
         System.out.println("2. Edit Task Due Date");
@@ -137,7 +137,6 @@ public class App {
 
         return;
     }
-
 
     private void addTask(ArrayList<Task> listOfTasks) {
         showTaskList(listOfTasks);
@@ -177,78 +176,92 @@ public class App {
         }
     }
 
-
-    private static String convertListOfObjectsToJson(ArrayList <Task> taskList) {
+    private static String convertListOfObjectsToJson(ArrayList<Task> taskList) {
         ObjectMapper mapper = new ObjectMapper();
         String result = null;
         try {
             result = mapper.writeValueAsString(taskList);
-        }catch (JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return result;
-    }
-
-    Scanner scanner = new Scanner(System.in);
-    public static void main(String[] args) {
-        App app = new App();
-
-        Task task1 = new Task("De-thatch lawn", LocalDate.of(2021,05, 01), true, false);
-        Task task2 = new Task("Rake Leaves", LocalDate.of(2021,05, 02), false, false);
-        Task task3 = new Task("Mow Lawn", LocalDate.of(2021,05, 03), false, false);
-        ArrayList<Task> listOfTasks = new ArrayList<>();
-        listOfTasks.add(task1);
-        listOfTasks.add(task2);
-        listOfTasks.add(task3);
-        String jsonList = convertListOfObjectsToJson(listOfTasks);
-
-        String responseReturned;
-        do {
-            app.displayFirstMenu();
-
-            String prompt = "\nPlease input an option 1 to 7:";
-            responseReturned = app.callScanner(prompt);
-
-            System.out.println("\nYour response was: " + responseReturned);
-            switch (responseReturned) {
-                case "1":
-                    System.out.println("You chose to open the To Do List");
-                    break;
-                case "2":
-                    System.out.println("You chose to display the To Do List");
-                    app.displayTaskList(listOfTasks);
-                    break;
-                case "3":
-                    System.out.println("You chose to edit a To Do Item");
-                    app.editTask(listOfTasks);
-                    break;
-                case "4":
-                    System.out.println("You chose to add a To Do Item");
-                    app.addTask(listOfTasks);
-                    break;
-                case "5":
-                    System.out.println("You chose to delete a To Do Item");
-                    app.deleteTask(listOfTasks);
-                    break;
-                case "6":
-                    System.out.println("You chose to save the To Do List");
-                    break;
-                case "7":
-                    System.out.println("You chose to exit the To Do List");
-                    break;
-                default:
-                    System.out.println("You chose an invalid option. Please choose a number from 1 to 7");
-                    break;
+        try {
+            file = new FileWriter("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/TasklistArray.txt");
+            file.write(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                file.flush();
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } while (!responseReturned.equals("7"));
-        app.scanner.close();
-    }
+        }
+            return result;
+        }
 
+        Scanner scanner = new Scanner(System.in);
+        public static void main(String[] args){
+            App app = new App();
 
+            Task task1 = new Task("De-thatch lawn", LocalDate.of(2021, 05, 01), true, false);
+            Task task2 = new Task("Rake Leaves", LocalDate.of(2021, 05, 02), false, false);
+            Task task3 = new Task("Mow Lawn", LocalDate.of(2021, 05, 03), false, false);
+            ArrayList<Task> listOfTasks = new ArrayList<>();
+            listOfTasks.add(task1);
+            listOfTasks.add(task2);
+            listOfTasks.add(task3);
+//        String jsonList = convertListOfObjectsToJson(listOfTasks);
+
+            String responseReturned;
+            do {
+                app.displayFirstMenu();
+
+                String prompt = "\nPlease input an option 1 to 7:";
+                responseReturned = app.callScanner(prompt);
+
+                System.out.println("\nYour response was: " + responseReturned);
+                switch (responseReturned) {
+                    case "1":
+                        System.out.println("You chose to open the To Do List");
+                        break;
+                    case "2":
+                        System.out.println("You chose to display the To Do List");
+                        app.displayTaskList(listOfTasks);
+                        break;
+                    case "3":
+                        System.out.println("You chose to edit a To Do Item");
+                        app.editTask(listOfTasks);
+                        break;
+                    case "4":
+                        System.out.println("You chose to add a To Do Item");
+                        app.addTask(listOfTasks);
+                        break;
+                    case "5":
+                        System.out.println("You chose to delete a To Do Item");
+                        app.deleteTask(listOfTasks);
+                        break;
+                    case "6":
+                        System.out.println("You chose to save the To Do List");
+                        String jsonListObject = convertListOfObjectsToJson(listOfTasks);
+                        System.out.println("The file has been saved to C:Users>s306717>Java>JavaGettingStarted_ToDo_list>TasklistArray.txt");
+                        app.askIfFinished();
+                        break;
+                    case "7":
+                        System.out.println("You chose to exit the To Do List");
+                        break;
+                    default:
+                        System.out.println("You chose an invalid option. Please choose a number from 1 to 7");
+                        break;
+                }
+            } while (!responseReturned.equals("7"));
+            app.scanner.close();
+        }
 
 
 //At end look for duplicate code to be able to call a function to refactor it
 
 //how do I convert a java object array list to JSON.  Example can be found here: https://www.geeksforgeeks.org/convert-java-object-to-json-string-using-jackson-api/
+
 
 }
