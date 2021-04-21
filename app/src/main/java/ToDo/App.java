@@ -1,12 +1,20 @@
 package ToDo;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -176,7 +184,7 @@ public class App {
         }
     }
 
-    private static String convertListOfObjectsToJson(ArrayList<Task> taskList) {
+    private static String saveListToJsonFile(ArrayList<Task> taskList) {
         ObjectMapper mapper = new ObjectMapper();
         String result = null;
         try {
@@ -185,7 +193,7 @@ public class App {
             e.printStackTrace();
         }
         try {
-            file = new FileWriter("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/TasklistArray.txt");
+            file = new FileWriter("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/Tasklist.json");
             file.write(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -197,8 +205,23 @@ public class App {
                 e.printStackTrace();
             }
         }
-            return result;
+        System.out.println(result);
+        return result;
         }
+
+    private static String readListFromJsonFile(ArrayList<Task> taskList) {
+        JSONParser parser = new JSONParser();
+        ArrayList<JSONObject> jsonObject = null;
+        try {
+            Object obj = parser.parse(new FileReader("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/Tasklist.json"));
+            jsonObject = (ArrayList<JSONObject>) obj;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonObject);
+        return String.valueOf(jsonObject);
+    }
+
 
         Scanner scanner = new Scanner(System.in);
         public static void main(String[] args){
@@ -224,6 +247,8 @@ public class App {
                 switch (responseReturned) {
                     case "1":
                         System.out.println("You chose to open the To Do List");
+                        app.readListFromJsonFile(listOfTasks);
+                        app.askIfFinished();
                         break;
                     case "2":
                         System.out.println("You chose to display the To Do List");
@@ -242,9 +267,8 @@ public class App {
                         app.deleteTask(listOfTasks);
                         break;
                     case "6":
-                        System.out.println("You chose to save the To Do List");
-                        String jsonListObject = convertListOfObjectsToJson(listOfTasks);
-                        System.out.println("The file has been saved to C:Users>s306717>Java>JavaGettingStarted_ToDo_list>TasklistArray.txt");
+                        System.out.println("You chose to save the To Do List to C:Users>s306717>Java>JavaGettingStarted_ToDo_list>Tasklist.json");
+                        String jsonListObject = saveListToJsonFile(listOfTasks);
                         app.askIfFinished();
                         break;
                     case "7":
