@@ -67,7 +67,7 @@ public class App {
         System.out.println("\n\tList of Tasks");
         int count = 1;
         for (Task t : listOfTasks) {
-            System.out.println(count + " - " + t.getName() + "\n\t\tDue " + t.getDueDate() + "\n\t\tTask in progress? " + t.getInProgress() + "\n\t\tTask completed? " + t.getIsCompleted());
+            System.out.println(count + " - " + t.getName() + "\n\t\tDue " + t.getDueDate() + "\n\t\tTask in progress? " + t.getInProgress() + "\n\t\tTask completed? " + t.getCompleted());
             count++;
         }
     }
