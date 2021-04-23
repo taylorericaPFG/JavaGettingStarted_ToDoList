@@ -1,20 +1,17 @@
 package ToDo;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import org.json.simple.JSONArray;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.google.common.collect.Lists;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,7 +27,7 @@ public class App {
 
     public void displayFirstMenu() {
         System.out.println("\tMain Menu");
-        System.out.println("\n1. Open To Do List"); //eventually open the to do list from a file -- Look at this site to read the file: https://crunchify.com/how-to-read-json-object-from-file-in-java/
+        System.out.println("\n1. Open Saved To Do List");
         System.out.println("2. Display To Do Items");
         System.out.println("3. Edit To Do Item");
         System.out.println("4. Add To Do Item");
@@ -46,7 +43,7 @@ public class App {
         return response;
     }
 
-    private void displayTaskList(ArrayList<Task> listOfTasks) { //add to display everything or even to show just completed ones, etc.
+    private void displayTaskList(List<Task> listOfTasks) {
         showTaskList(listOfTasks);
         askIfFinished();
     }
@@ -66,18 +63,18 @@ public class App {
             return;
     }
 
-    private void showTaskList(ArrayList<Task> listOfTasks) {
+    private void showTaskList(List<Task> listOfTasks) {
         System.out.println("\n\tList of Tasks");
         int count = 1;
         for (Task t : listOfTasks) {
-            System.out.println(count + " - " + t.getName() + "\n\t\tDue " + t.getDueDate() + "\n\t\tTask in progress? " + t.isInProgress() + "\n\t\tTask completed? " + t.isCompleted());
+            System.out.println(count + " - " + t.getName() + "\n\t\tDue " + t.getDueDate() + "\n\t\tTask in progress? " + t.getInProgress() + "\n\t\tTask completed? " + t.getIsCompleted());
             count++;
         }
     }
 
     //create method to accept true or false answer
 
-    private void editTask(ArrayList<Task> listOfTasks) {
+    private void editTask(List<Task> listOfTasks) {
         showTaskList(listOfTasks);
         String prompt = "\nType the number of the item you want to edit and press Enter or simply press Enter to return to Main Menu without editing a To Do Item";
         String responseReturned = callScanner(prompt);
@@ -146,7 +143,7 @@ public class App {
         return;
     }
 
-    private void addTask(ArrayList<Task> listOfTasks) {
+    private void addTask(List<Task> listOfTasks) {
         showTaskList(listOfTasks);
         String prompt = "\nType the wording for the item you wish to add and press Enter or simply press Enter to return to Main Menu without adding a To Do Item";
         String taskName = callScanner(prompt);
@@ -163,7 +160,7 @@ public class App {
         }
     }
 
-    private void deleteTask(ArrayList<Task> listOfTasks) {
+    private void deleteTask(List<Task> listOfTasks) {
         showTaskList(listOfTasks);
         String prompt = "\nType the number of the item you wish to delete and press Enter or simply press Enter to return to Main Menu without deleting a To Do Item";
         String responseReturned = callScanner(prompt);
@@ -184,7 +181,7 @@ public class App {
         }
     }
 
-    private static String saveListToJsonFile(ArrayList<Task> taskList) {
+    private static String saveListToJsonFile(List<Task> taskList) {
         ObjectMapper mapper = new ObjectMapper();
         String result = null;
         try {
@@ -207,34 +204,90 @@ public class App {
         }
         System.out.println(result);
         return result;
-        }
-
-    private static String readListFromJsonFile(ArrayList<Task> taskList) {
-        JSONParser parser = new JSONParser();
-        ArrayList<JSONObject> jsonObject = null;
-        try {
-            Object obj = parser.parse(new FileReader("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/Tasklist.json"));
-            jsonObject = (ArrayList<JSONObject>) obj;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(jsonObject);
-        return String.valueOf(jsonObject);
     }
 
 
+//    private static void readListFromJsonFile(List<Task> taskList) throws IOException {
+//        JSONParser parser = new JSONParser();
+//        ArrayList<JSONObject> jsonObject = null;
+//        try {
+//            Object obj = parser.parse(new FileReader("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/Tasklist.json"));
+//            jsonObject = (ArrayList<JSONObject>) obj;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(jsonObject); //prints out json string saved in the file
+//
+//        String response = String.valueOf(jsonObject);
+//        ObjectMapper mapper = new ObjectMapper();
+//        List<Task> taskArray = null;
+//        try {
+//            CollectionType listType = mapper.getTypeFactory().constructCollectionType(ArrayList.class, Task.class);
+//            taskArray = mapper.readValue(response,listType);
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        ArrayList<Task> listOfTasks = new ArrayList<>(taskArray);
+
+//        System.out.println(listOfTasks.get(0).getName() + " " + listOfTasks.get(0).getDueDate() + " " + listOfTasks.get(0).getIsCompleted() + " " + listOfTasks.get(0).getInProgress());
+//        System.out.println(listOfTasks.get(1).getName() + " " + listOfTasks.get(1).getDueDate() + " " + listOfTasks.get(1).getIsCompleted() + " " + listOfTasks.get(1).getInProgress());
+
+//    }
+
+
+//This is the mapper code we impemented on 4/22 in the cohort
+//        FileReader fr = new FileReader("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/Tasklist.json");
+//        String response;
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            BufferedReader bufferreader = new BufferedReader(fr);
+//            while ((response = bufferreader.readLine()) != null) {
+//                 listOfTasks = mapper.readValue(response, List.class);
+//            }
+//        } catch (FileNotFoundException ex) {
+//            ex.printStackTrace();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//            return;
+//    }
+
+
+
         Scanner scanner = new Scanner(System.in);
-        public static void main(String[] args){
+        static List<Task> listOfTasks = new ArrayList<>();
+        public static void main(String[] args) throws IOException {
             App app = new App();
 
-            Task task1 = new Task("De-thatch lawn", LocalDate.of(2021, 05, 01), true, false);
-            Task task2 = new Task("Rake Leaves", LocalDate.of(2021, 05, 02), false, false);
-            Task task3 = new Task("Mow Lawn", LocalDate.of(2021, 05, 03), false, false);
-            ArrayList<Task> listOfTasks = new ArrayList<>();
-            listOfTasks.add(task1);
-            listOfTasks.add(task2);
-            listOfTasks.add(task3);
-//        String jsonList = convertListOfObjectsToJson(listOfTasks);
+//            Task task1 = new Task("De-thatch lawn", LocalDate.of(2021, 05, 01), true, false);
+//            Task task2 = new Task("Rake Leaves", LocalDate.of(2021, 05, 02), false, false);
+//            Task task3 = new Task("Mow Lawn", LocalDate.of(2021, 05, 03), false, false);
+//
+//            listOfTasks.add(task1);
+//            listOfTasks.add(task2);
+//            listOfTasks.add(task3);
+
+                JSONParser parser = new JSONParser();
+                ArrayList<JSONObject> jsonObject = null;
+                try {
+                    Object obj = parser.parse(new FileReader("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/Tasklist.json"));
+                    jsonObject = (ArrayList<JSONObject>) obj;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                System.out.println(jsonObject); //prints out json string saved in the file
+
+                String response = String.valueOf(jsonObject);
+                ObjectMapper mapper = new ObjectMapper();
+                List<Task> taskArray = null;
+                try {
+                    CollectionType listType = mapper.getTypeFactory().constructCollectionType(ArrayList.class, Task.class);
+                    taskArray = mapper.readValue(response,listType);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<Task> listOfTasks = new ArrayList<>(taskArray);
+            
 
             String responseReturned;
             do {
@@ -246,8 +299,8 @@ public class App {
                 System.out.println("\nYour response was: " + responseReturned);
                 switch (responseReturned) {
                     case "1":
-                        System.out.println("You chose to open the To Do List");
-                        app.readListFromJsonFile(listOfTasks);
+                        System.out.println("You chose to open the saved To Do List");
+//                        app.readListFromJsonFile(listOfTasks);
                         app.askIfFinished();
                         break;
                     case "2":
@@ -268,7 +321,7 @@ public class App {
                         break;
                     case "6":
                         System.out.println("You chose to save the To Do List to C:Users>s306717>Java>JavaGettingStarted_ToDo_list>Tasklist.json");
-                        String jsonListObject = saveListToJsonFile(listOfTasks);
+                        saveListToJsonFile(listOfTasks);
                         app.askIfFinished();
                         break;
                     case "7":
