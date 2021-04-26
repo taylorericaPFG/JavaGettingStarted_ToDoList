@@ -16,7 +16,6 @@ public class App {
     private static FileWriter file;
 
     public String getGreeting() {
-
         return "ToDo List Manager";
     }
 
@@ -198,37 +197,38 @@ public class App {
         return result;
     }
 
-        Scanner scanner = new Scanner(System.in);
-        static List<Task> listOfTasks = new ArrayList<>();
-        public static void main(String[] args) throws IOException {
+    private static ArrayList<Task> openListFromJsonFile(){
+        JSONParser parser = new JSONParser();
+        ArrayList<JSONObject> jsonObject = null;
+        try {
+            Object obj = parser.parse(new FileReader("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/Tasklist.json"));
+            jsonObject = (ArrayList<JSONObject>) obj; //This opens the saved file
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String response = String.valueOf(jsonObject);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Task> taskArray = null;
+        try {
+            CollectionType listType = mapper.getTypeFactory().constructCollectionType(ArrayList.class, Task.class);
+            taskArray = mapper.readValue(response,listType); //This maps the json file to the task list
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        ArrayList<Task> listOfTasks = new ArrayList<>(taskArray);
+        return listOfTasks;
+    }
+
+    Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
             App app = new App();
-
-                //opening the saved file
-                JSONParser parser = new JSONParser();
-                ArrayList<JSONObject> jsonObject = null;
-                try {
-                    Object obj = parser.parse(new FileReader("C:/Users/s306717/Java/JavaGettingStarted_ToDoList/Tasklist.json"));
-                    jsonObject = (ArrayList<JSONObject>) obj;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                //mapping json file to the task list
-                String response = String.valueOf(jsonObject);
-                ObjectMapper mapper = new ObjectMapper();
-                List<Task> taskArray = null;
-                try {
-                    CollectionType listType = mapper.getTypeFactory().constructCollectionType(ArrayList.class, Task.class);
-                    taskArray = mapper.readValue(response,listType);
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ArrayList<Task> listOfTasks = new ArrayList<>(taskArray);
+            ArrayList<Task> listOfTasks = openListFromJsonFile();
 
             String responseReturned;
             do {
                 app.displayFirstMenu();
-
                 String prompt = "\nPlease input an option 1 to 6:";
                 responseReturned = app.callScanner(prompt);
 
